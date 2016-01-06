@@ -1,0 +1,34 @@
+---
+
+  - name: Enable aptcache proxy
+    lineinfile: >
+        dest=/etc/apt/apt.conf.d/02proxy create=yes mode=644 owner=root group=root
+        regexp=^
+        line='Acquire::http { Proxy "http://192.168.0.131:3142"; };'
+    when: use_apt_cacher == true
+    #must be var'ed better
+        
+  - name: ensure common packages are installed
+    apt: name={{ item }} update_cache=yes cache_valid_time=18000
+    with_items:
+        - ntp
+        - unattended-upgrades
+    tags: packages
+    
+  - name: Push files under etc folder to server
+    copy: src="etc/" dest=/etc owner=root group=root
+    ignore_errors: True
+  
+  - name: ensure ntp is running (and enable it at boot)
+    service: name=ntp state=started enabled=yes
+    tags: packages
+    
+  - name: ensure ufw is running with ssh allowed
+    service: name=ufw state=started enabled=yes
+    tags: packages
+    
+  - ufw: rule=allow name=OpenSSH
+    tags: packages
+    
+  - ufw: state=enabled policy=deny
+    tags: packages

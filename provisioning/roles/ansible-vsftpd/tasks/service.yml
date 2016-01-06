@@ -1,0 +1,24 @@
+---
+
+- name: Configuring service
+  service: >
+    name={{ item }} 
+    state={{ vsftpd_service_state }}
+    enabled={{ vsftpd_service_enabled }}
+  with_items:
+    - vsftpd
+    - ufw    
+  tags:
+    - networking
+    - vsftpd
+    - service
+
+- name: allow ftp ports
+  ufw: >
+    rule=allow 
+    proto=tcp
+    to_port={{ item }} 
+  with_items:
+    - '20:21'
+    - '21000:21100'
+#    - { from: '{{ vsftpd_config.iteritems.pasv_min_port }}', to: '{{ vsftpd_config.iteritems.pasv_max_port }}' }

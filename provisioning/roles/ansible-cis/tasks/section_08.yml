@@ -1,0 +1,187 @@
+---
+
+# Change order or the default auditd.conf file will not be created
+  - name: 8.1.2 Install and Enable auditd Service (Scored)
+    apt: name=auditd state=present
+    tags:
+      - section8
+      - section8.1
+      - section8.1.2
+      - section8.1.2
+
+  - name: Check if the file auditd.conf exists (Not Scored)
+    stat: >
+        path=/etc/audit/auditd.conf
+    register: auditd_file
+    tags:
+      - section8
+      - section8.1
+      - section8.1.1
+      - section8.1.1.1
+
+  - name: Create the audit directory if it does not exists (Not Scored)
+    file: >
+        path=/etc/audit/
+        state=directory
+    when: not auditd_file.stat.exists
+    tags:
+      - section8
+      - section8.1
+      - section8.1.1
+      - section8.1.1.1
+
+  - name: 8.1.4 Record Events That Modify Date and Time Information (Scored)
+    lineinfile: >
+      dest=/etc/audit/audit.rules
+      line='{{ item }}'
+      state=present
+      create=yes
+    with_items:
+      - '-a always,exit -F arch=b64 -S adjtimex -S settimeofday -k time-change'
+      - '-a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change'
+      - '-a always,exit -F arch=b64 -S clock_settime -k time-change'
+      - '-a always,exit -F arch=b32 -S clock_settime -k time-change'
+      - '-w /etc/localtime -p wa -k time-change'
+    notify: restart auditd
+    when: ansible_userspace_bits == "64"
+    tags:
+      - section8
+      - section8.1
+      - section8.1.4
+
+  - name: 8.1.4 Record Events That Modify Date and Time Information (Scored)
+    lineinfile: >
+      dest=/etc/audit/audit.rules
+      line='{{ item }}'
+      state=present
+      create=yes
+    with_items:
+      - '-a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change'
+      - '-a always,exit -F arch=b32 -S clock_settime -k time-change'
+      - '-w /etc/localtime -p wa -k time-change'
+    notify: restart auditd
+    when: ansible_userspace_bits == "32"
+    tags:
+      - section8
+      - section8.1
+      - section8.1.4
+
+  - name: 8.1.5,7,8,9,15,16,17 Record Events That Modify User/Group Information (Scored)
+    lineinfile: >
+      dest=/etc/audit/audit.rules
+      line='{{ item }}'
+      state=present
+      create=yes
+    with_items:
+      - '-w /etc/group -p wa -k identity'
+      - '-w /etc/passwd -p wa -k identity'
+      - '-w /etc/gshadow -p wa -k identity'
+      - '-w /etc/shadow -p wa -k identity'
+      - '-w /etc/security/opasswd -p wa -k identity'
+      - '-w /var/log/faillog -p wa -k logins'
+      - '-w /var/log/lastlog -p wa -k logins'
+      - '-w /var/log/tallylog -p wa -k logins'
+      - '-w /var/run/utmp -p wa -k session'
+      - '-w /var/log/wtmp -p wa -k session'
+      - '-w /var/log/btmp -p wa -k session'
+      - '-w /etc/selinux/ -p wa -k MAC-policy'
+      - '-w /etc/sudoers -p wa -k scope'
+      - '-w /var/log/sudo.log -p wa -k actions'
+      - '-w /sbin/insmod -p x -k modules'
+      - '-w /sbin/rmmod -px -k modules'
+      - '-w /sbin/modprobe -p x -k modules'
+    notify: restart auditd
+    tags:
+      - section8
+      - section8.1
+      - section8.1.5
+      - section8.1.7
+      - section8.1.8
+      - section8.1.9
+      - section8.1.15
+      - section8.1.16
+      - section8.1.17
+
+  - name: 8.1.6,10,11,13,14,17 Record Events That Modify the System's Network Environment (64b) (Scored)
+    lineinfile: >
+      dest=/etc/audit/audit.rules
+      line='{{ item }}'
+      state=present
+      create=yes
+    with_items:
+      - '-a exit,always -F arch=b64 -S sethostname -S setdomainname -k system-locale'
+      - '-a exit,always -F arch=b32 -S sethostname -S setdomainname -k system-locale'
+      - '-w /etc/issue -p wa -k system-locale'
+      - '-w /etc/issue.net -p wa -k system-locale'
+      - '-w /etc/hosts -p wa -k system-locale'
+      - '-w /etc/network -p wa -k system-locale'
+      - '-a always,exit -F arch=b64 -S chmod -S fchmod -S fchmodat -F auid>=500 -F auid!=4294967295 -k perm_mod'
+      - '-a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=500 -F auid!=4294967295 -k perm_mod'
+      - '-a always,exit -F arch=b64 -S chown -S fchown -S fchownat -S lchown -F auid>=500 -F auid!=4294967295 -k perm_mod'
+      - '-a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>=500 -F auid!=4294967295 -k perm_mod'
+      - '-a always,exit -F arch=b64 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=500 -F auid!=4294967295 -k perm_mod'
+      - '-a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=500 -F auid!=4294967295 -k perm_mod'
+      - '-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=500 -F auid!=4294967295 -k access'
+      - '-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=500 -F auid!=4294967295 -k access'
+      - '-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=500 -F auid!=4294967295 -k access'
+      - '-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=500 -F auid!=4294967295 -k access'
+      - '-a always,exit -F arch=b64 -S mount -F auid>=500 -F auid!=4294967295 -k mounts'
+      - '-a always,exit -F arch=b32 -S mount -F auid>=500 -F auid!=4294967295 -k mounts'
+      - '-a always,exit -F arch=b64 -S unlink -S unlinkat -S rename -S renameat -F auid>=500 -F auid!=4294967295 -k delete'
+      - '-a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=500 -F auid!=4294967295 -k delete'
+      - '-a always,exit -F arch=b64 -S init_module -S delete_module -k modules'
+    notify: restart auditd
+    when: ansible_userspace_bits == "64"
+    tags:
+      - section8
+      - section8.1
+      - section8.1.6
+      - section8.1.10
+      - section8.1.11
+      - section8.1.13
+      - section8.1.14
+      - section8.1.17
+
+  - name: 8.1.6,10,11,13,14,17 Record Events That Modify the System's Network Environment (32b) (Scored)
+    lineinfile: >
+      dest=/etc/audit/audit.rules
+      line='{{ item }}'
+      state=present
+      create=yes
+    with_items:
+      - '-a exit,always -F arch=b32 -S sethostname -S setdomainname -k system-locale'
+      - '-w /etc/issue -p wa -k system-locale'
+      - '-w /etc/issue.net -p wa -k system-locale'
+      - '-w /etc/hosts -p wa -k system-locale'
+      - '-w /etc/network -p wa -k system-locale'
+      - '-a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=500 -F auid!=4294967295 -k perm_mod'
+      - '-a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>=500 -F auid!=4294967295 -k perm_mod'
+      - '-a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=500 -F auid!=4294967295 -k perm_mod'
+      - '-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=500 -F auid!=4294967295 -k access'
+      - '-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=500 -F auid!=4294967295 -k access'
+      - '-a always,exit -F arch=b32 -S mount -F auid>=500 -F auid!=4294967295 -k mounts'
+      - '-a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=500 -F auid!=4294967295 -k delete'
+      - '-a always,exit -F arch=b32 -S init_module -S delete_module -k modules'
+    notify: restart auditd
+    when: ansible_userspace_bits == "32"
+    tags:
+      - section8
+      - section8.1
+      - section8.1.6
+      - section8.1.10
+      - section8.1.11
+      - section8.1.13
+      - section8.1.14
+      - section8.1.17
+
+  - name: 8.1.18 Make the Audit Configuration Immutable (Scored)
+    lineinfile: >
+        dest='/etc/audit/audit.rules'
+        line='-e 2'
+        insertafter=EOF
+        state=present
+        create=yes
+    tags:
+      - section8
+      - section8.1
+      - section8.1.18

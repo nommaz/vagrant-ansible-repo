@@ -1,0 +1,24 @@
+---
+
+# ansible-playbook -i /etc/ansible/staging repo.yml -u nommazve -v
+
+#########################
+# CIS Hardening         #
+#########################
+
+- hosts: paris-repo
+  sudo: true
+  tags: cis
+  roles:
+    - role: ansible-cis
+      use_apt_cacher: False
+    
+#########################
+# Elasticsearch install #
+#########################
+
+- hosts: paris-repo
+  sudo: true
+  tags: vsftpd
+  roles:
+    - ansible-vsftpd

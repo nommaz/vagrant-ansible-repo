@@ -1,0 +1,21 @@
+---
+
+#########################
+# CIS Hardening         #
+#########################
+
+- hosts: master
+  sudo: true
+  tags: cis
+  roles:
+#    - ansible-cis
+
+#########################
+# FTP                   #
+#########################
+
+- hosts: master
+  sudo: true
+  tags: vsftpd
+  roles:
+    - ansible-vsftpd

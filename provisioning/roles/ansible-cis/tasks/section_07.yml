@@ -1,0 +1,12 @@
+---
+
+  - name: 7.2.8 Enable TCP SYN Cookies (Scored)
+    sysctl: >
+      name=net.ipv4.tcp_syncookies
+      value=1
+      state=present
+    when: enable_tcp_syncookies
+    tags:
+      - section7
+      - section7.2
+      - section7.2.8

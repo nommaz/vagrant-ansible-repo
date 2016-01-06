@@ -1,0 +1,69 @@
+---
+
+  - name: 9.3.1 Set SSH Protocol to 2 (Scored)
+    lineinfile: >
+        dest='/etc/ssh/sshd_config'
+        regexp='^Protocol'
+        state=present
+        line='Protocol 2'
+    notify: restart ssh
+    tags:
+      - section9
+      - section9.3
+      - section9.3.1
+
+  - name: 9.3.2 Set LogLevel to INFO (Scored)
+    lineinfile: >
+        dest='/etc/ssh/sshd_config'
+        regexp='^LogLevel'
+        state=present
+        line='LogLevel INFO'
+    notify: restart ssh
+    tags:
+      - section9
+      - section9.3
+      - section9.3.2
+
+  - name: 9.3.3 Set Permissions on /etc/ssh/sshd_config (Scored)
+    file: path='/etc/ssh/sshd_config' owner=root group=root mode=600
+    notify: restart ssh
+    tags:
+      - section9
+      - section9.3
+      - section9.3.3
+
+#Regroups sections 9.3.4 9.3.7 9.3.8 9.3.9 9.3.10
+  - name: 9.3.{4,7,8,9,10} Disable some SSH options (Scored)
+    lineinfile: >
+        dest='/etc/ssh/sshd_config'
+        regexp='^{{ item }}'
+        line='{{ item }} no'
+        state=present
+    with_items:
+      - X11Forwarding
+      - HostbasedAuthentication
+      - PermitRootLogin
+      - PermitEmptyPasswords
+      - PermitUserEnvironment
+    notify: restart ssh
+    tags:
+      - section9
+      - section9.3
+      - section9.3.4
+      - section9.3.7
+      - section9.3.8
+      - section9.3.9
+      - section9.3.10
+
+  - name: 9.3.14 Set SSH Banner (Scored)
+    lineinfile: >
+        dest='/etc/ssh/sshd_config'
+        regexp='^Banner'
+        line='Banner /etc/issue.net'
+        state=present
+    notify: restart ssh
+    tags:
+      - section9
+      - section9.3
+      - section9.3.14
+

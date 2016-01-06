@@ -1,0 +1,22 @@
+---
+
+  - name: 10.1.1 Set Password Expiration Days (Scored)
+    lineinfile: >
+        dest='/etc/login.defs'
+        line='PASS_MAX_DAYS 90'
+        state=present
+        regexp='^PASS_MAX_DAYS'
+    tags:
+      - section10
+      - section10.1
+      - section10.1.1
+
+  - name: 10.1.2 Set Password Change Minimum Number of Days (Scored)
+    lineinfile: >
+        dest='/etc/login.defs'
+        line='PASS_MIN_DAYS 7'
+        regexp='^PASS_MIN_DAYS'
+    tags:
+      - section10
+      - section10.1
+      - section10.1.2

@@ -1,0 +1,5 @@
+
+# Section 13
+
+# This variable defines if accounts without password have to be locked
+lock_shadow_accounts: True
