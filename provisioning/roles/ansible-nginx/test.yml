@@ -1,0 +1,6 @@
+---
+- hosts: "{{hosts_group|default('all')}}"
+  vars_files:
+    - 'repo-vars.yml'
+  roles:
+    - "{{role_name|default('ansible-nginx')}}"
