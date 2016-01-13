@@ -11,10 +11,9 @@
   tags: cis
   roles:
     - role: ansible-cis
-      use_apt_cacher: False
     
 #########################
-# Elasticsearch install #
+# FTP Server            #
 #########################
 
 - hosts: paris-repo
@@ -22,3 +21,13 @@
   tags: vsftpd
   roles:
     - ansible-vsftpd
+
+#########################
+# HTTP server           #
+#########################
+
+- hosts: paris-repo
+  sudo: true
+  tags: nginx
+  roles:
+     - ansible-nginx

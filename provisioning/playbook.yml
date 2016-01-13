@@ -8,7 +8,7 @@
   sudo: true
   tags: cis
   roles:
-#    - ansible-cis
+    - ansible-cis
 
 #########################
 # FTP                   #
@@ -19,3 +19,13 @@
   tags: vsftpd
   roles:
     - ansible-vsftpd
+    
+    
+# HTTP server           #
+#########################
+
+- hosts: master
+  sudo: true
+  tags: nginx
+  roles:
+     - ansible-nginx

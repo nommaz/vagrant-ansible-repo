@@ -1,6 +1,6 @@
 ---
 
-  - include: check_requirements.yml
+  #- include: check_requirements.yml
 
   - include: hugin.yml
     tags: hugin_common

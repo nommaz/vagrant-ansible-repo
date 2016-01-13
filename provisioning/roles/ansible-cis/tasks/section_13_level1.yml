@@ -17,6 +17,15 @@
     tags:
       - section13
       - section13.1
+      
+  - name: 13.7.1 Check Permissions on User Home Directories (gather users) (Scored)
+    shell: /bin/egrep -v '(root|halt|sync|shutdown|false)' /etc/passwd | /usr/bin/awk -F':' '($7 != "/usr/sbin/nologin") { print $6 }'
+    register: home_users
+    changed_when: False
+    failed_when: False
+    tags:
+      - section13
+      - section13.7
 
   - name: 13.9 Check Permissions on User .netrc Files (Scored)
     file: >
@@ -44,16 +53,6 @@
     stat: path='{{ item }}/.netrc'
     with_items: home_users.stdout_lines
     register: netrc_files
-    tags:
-      - section13
-      - section13.18
-
-  - name: 13.18 Check for Presence of User .netrc Files (Scored)
-    file: >
-        path='{{ item }}'
-        state=absent
-    when: item is defined and item.stat.exists == True
-    with_items: netrc_files.results
     tags:
       - section13
       - section13.18

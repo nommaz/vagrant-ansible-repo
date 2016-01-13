@@ -12,10 +12,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.box = "ubuntu/trusty64"
+  
+  config.vm.network :forwarded_port, guest: 4443, host: 8443
+  
   for i in 20..21
     config.vm.network :forwarded_port, guest: i, host: 2200+i
   end
-  for i in 21000..21100
+  for i in 21000..21010
     config.vm.network :forwarded_port, guest: i, host: i
   end
   config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
@@ -23,13 +26,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provider :virtualbox do |vb|
       vb.customize ["modifyvm", :id, "--cpus", "1", "--memory", "1024"]
   end
-
-  config.vm.provider "vmware_fusion" do |v, override|
-     ## the puppetlabs ubuntu 14-04 image might work on vmware, not tested? 
-    v.box = "phusion/ubuntu-14.04-amd64"
-    v.vmx["numvcpus"] = "2"
-    v.vmx["memsize"] = "4096"
-  end
+  
   config.vm.provision :shell,
     :keep_color => true,
     :path => "setup.sh"

@@ -159,7 +159,8 @@ ssl_sslv3=NO
 require_ssl_reuse=NO
 ssl_ciphers=HIGH
 pasv_min_port=21000
-pasv_max_port=21100
+pasv_max_port=21010
+pasv_address=127.0.0.1
         
 {% for key, value in vsftpd_config.iteritems() %}
 {{ key }}={{ value }}
