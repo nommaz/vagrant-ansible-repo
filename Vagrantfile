@@ -12,6 +12,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.box = "ubuntu/trusty64"
+  config.vm.hostname = 'repo.local'
+
+  config.vm.network :private_network, ip: '192.168.88.11'
   
   config.vm.network :forwarded_port, guest: 4443, host: 8443
   
@@ -22,10 +25,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.network :forwarded_port, guest: i, host: i
   end
   config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
-
-  config.vm.provider :virtualbox do |vb|
-      vb.customize ["modifyvm", :id, "--cpus", "1", "--memory", "1024"]
-  end
   
   config.vm.provision :shell,
     :keep_color => true,

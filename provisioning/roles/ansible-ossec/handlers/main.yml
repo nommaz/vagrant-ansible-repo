@@ -1,0 +1,12 @@
+---
+# handlers file for ossec-role
+
+- name: start ossec
+  service: name=ossec
+           state=started
+           enabled=yes
+           
+- name: restart ossec
+  service: name=ossec
+           state=restarted
+           enabled=yes

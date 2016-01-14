@@ -1,0 +1,31 @@
+---
+# tasks file for ossec-role
+  
+- name: Stop Ossec
+  command: "/var/ossec/bin/ossec-control stop"
+  ignore_errors: yes
+
+- name: Clean OSSEC directory
+  file: path={{ ossec_dir }}
+        state=absent
+  ignore_errors: yes
+
+- name: Get OSSEC
+  get_url: url={{ ossec_url }}
+           dest={{ ossec_dl_dest }}
+
+- name: Extract OSSEC Source
+  unarchive: src={{ ossec_dl_dest }}/ossec-hids-{{ ossec_version }}.tar.gz           
+             dest={{ ossec_dl_dest }}/
+             creates={{ ossec_dl_dest }}/ossec-hids-{{ ossec_version }}
+             copy=no
+
+- name: Configure Preloaded OSSEC Vars (needed for automatic installation)
+  template: src=preloaded-vars.conf.j2
+            dest={{ ossec_dl_dest }}/ossec-hids-{{ ossec_version }}/etc/preloaded-vars.conf
+
+- name: Compile and install OSSEC
+  command: "{{ ossec_dl_dest }}/ossec-hids-{{ ossec_version }}/install.sh        
+            chdir={{ ossec_dl_dest }}/ossec-hids-{{ ossec_version }}"
+    
+  notify: start ossec

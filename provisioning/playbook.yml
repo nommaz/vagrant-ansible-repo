@@ -11,6 +11,16 @@
     - ansible-cis
 
 #########################
+# CIS Hardening         #
+#########################
+
+- hosts: master
+  sudo: true
+  tags: ossec
+  roles:
+    - ansible-ossec
+    
+#########################
 # FTP                   #
 #########################
 
