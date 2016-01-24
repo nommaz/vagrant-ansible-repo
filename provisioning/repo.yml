@@ -1,6 +1,6 @@
 ---
 
-# ansible-playbook -i /etc/ansible/staging repo.yml -u nommazve -v
+# ansible-playbook -i ../../vagrant-ansible-common/XXX/hosts repo.yml -v
 
 #########################
 # CIS Hardening         #

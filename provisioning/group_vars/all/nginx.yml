@@ -26,7 +26,7 @@ nginx_http_params:
 
 nginx_sites:
  default:
-     - listen 4443
+     - listen 4443 #TODO var this value
      - server_name repo
      - root /var/www/nginx-default/packageserver
      - index index.html

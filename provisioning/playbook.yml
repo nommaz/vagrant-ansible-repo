@@ -9,16 +9,6 @@
   tags: cis
   roles:
     - ansible-cis
-
-#########################
-# CIS Hardening         #
-#########################
-
-- hosts: master
-  sudo: true
-  tags: ossec
-  roles:
-    - ansible-ossec
     
 #########################
 # FTP                   #
@@ -39,3 +29,13 @@
   tags: nginx
   roles:
      - ansible-nginx
+    
+#########################
+# OSSEC Client          #
+#########################
+
+- hosts: master
+  sudo: true
+  tags: ossec
+  roles:
+    - ansible-ossec-agent

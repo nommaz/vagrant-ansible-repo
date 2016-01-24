@@ -8,7 +8,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # set to false, if you do NOT want to check the correct VirtualBox Guest Additions version when booting this box
   if defined?(VagrantVbguest::Middleware)
-    config.vbguest.auto_update = true
+    config.vbguest.auto_update = false
   end
 
   config.vm.box = "ubuntu/trusty64"
@@ -24,6 +24,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   for i in 21000..21010
     config.vm.network :forwarded_port, guest: i, host: i
   end
+  
+  config.vm.synced_folder "../vagrant-ansible-common", "/vagrant-ansible-common"
+  
   config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
   
   config.vm.provision :shell,

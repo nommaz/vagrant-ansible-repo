@@ -1,7 +1,0 @@
----
-
-  - name: 12.4 Verify User/Group Ownership on /etc/passwd (Scored)
-    file: path=/etc/passwd owner=root group=root
-    tags:
-      - section12
-      - section12.4
