@@ -6,28 +6,38 @@
 # CIS Hardening         #
 #########################
 
-- hosts: paris-repo
+- hosts: reposervers
   sudo: true
   tags: cis
   roles:
-    - role: ansible-cis
+    - ansible-cis
     
 #########################
-# FTP Server            #
+# FTP                   #
 #########################
 
-- hosts: paris-repo
+- hosts: reposervers
   sudo: true
   tags: vsftpd
   roles:
     - ansible-vsftpd
-
-#########################
+    
+    
 # HTTP server           #
 #########################
 
-- hosts: paris-repo
+- hosts: reposervers
   sudo: true
   tags: nginx
   roles:
      - ansible-nginx
+    
+#########################
+# OSSEC Client          #
+#########################
+
+- hosts: reposervers
+  sudo: true
+  tags: ossec
+  roles:
+    - ansible-ossec-agent
