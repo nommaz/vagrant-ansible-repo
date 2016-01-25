@@ -24,3 +24,6 @@
     - networking
     - vsftpd
     - config
+
+- name: Push files under etc folder to server
+  copy: src="etc/" dest=/etc owner=root group=root

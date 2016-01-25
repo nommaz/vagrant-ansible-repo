@@ -27,6 +27,10 @@
 - hosts: master
   sudo: true
   tags: nginx
+  
+  tasks:
+    - name create root directory
+      file: path={{ nginx_root}} state=directory owner=www-data group=www-data
   roles:
      - ansible-nginx
     
