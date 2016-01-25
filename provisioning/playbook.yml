@@ -20,7 +20,7 @@
   roles:
     - ansible-vsftpd
     
-    
+#########################
 # HTTP server           #
 #########################
 
@@ -29,7 +29,7 @@
   tags: nginx
   
   tasks:
-    - name create root directory
+    - name: create root directory
       file: path={{ nginx_root}} state=directory owner=www-data group=www-data
   roles:
      - ansible-nginx
@@ -41,5 +41,7 @@
 - hosts: master
   sudo: true
   tags: ossec
+  vars: 
+    ossec_server_ip: 192.168.88.10
   roles:
     - ansible-ossec-agent
