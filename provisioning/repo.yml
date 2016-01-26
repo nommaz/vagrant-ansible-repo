@@ -1,6 +1,7 @@
 ---
-
-# ansible-playbook -i ../../vagrant-ansible-common/XXX/hosts repo.yml -v
+# ansible-playbook -i ../../common/XXX/hosts repo.yml -u YYY -v 
+# XXX: dev,test,prod
+# YYY: remote user login name
 
 #########################
 # CIS Hardening         #
@@ -22,13 +23,16 @@
   roles:
     - ansible-vsftpd
     
-    
+#########################
 # HTTP server           #
 #########################
 
 - hosts: reposervers
   sudo: true
   tags: nginx
+  tasks:
+    - name: create root directory
+      file: path={{ nginx_root}} state=directory owner=www-data group=www-data
   roles:
      - ansible-nginx
     

@@ -25,7 +25,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.network :forwarded_port, guest: i, host: i
   end
   
-  config.vm.synced_folder "../vagrant-ansible-common", "/vagrant-ansible-common"
+  config.vm.synced_folder "../common", "/common"
   
   config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
   
