@@ -1,10 +1,13 @@
 ---
+# ansible-playbook -i ../../common/XXX/hosts repo.yml -u YYY -v 
+# XXX: dev,test,prod
+# YYY: remote user login name
 
 #########################
 # CIS Hardening         #
 #########################
 
-- hosts: master
+- hosts: reposervers
   sudo: true
   tags: cis
   roles:
@@ -14,7 +17,7 @@
 # FTP                   #
 #########################
 
-- hosts: master
+- hosts: reposervers
   sudo: true
   tags: vsftpd
   roles:
@@ -24,10 +27,9 @@
 # HTTP server           #
 #########################
 
-- hosts: master
+- hosts: reposervers
   sudo: true
   tags: nginx
-  
   tasks:
     - name: create root directory
       file: path={{ nginx_root}} state=directory owner=www-data group=www-data
@@ -38,10 +40,8 @@
 # OSSEC Client          #
 #########################
 
-- hosts: master
+- hosts: reposervers
   sudo: true
   tags: ossec
-  vars: 
-    ossec_server_ip: 192.168.88.10
   roles:
     - ansible-ossec-agent

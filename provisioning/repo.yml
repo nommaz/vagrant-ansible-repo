@@ -11,7 +11,7 @@
   sudo: true
   tags: cis
   roles:
-    - ansible-cis
+#    - ansible-cis
     
 #########################
 # FTP                   #
@@ -34,7 +34,7 @@
     - name: create root directory
       file: path={{ nginx_root}} state=directory owner=www-data group=www-data
   roles:
-     - ansible-nginx
+#     - ansible-nginx
     
 #########################
 # OSSEC Client          #

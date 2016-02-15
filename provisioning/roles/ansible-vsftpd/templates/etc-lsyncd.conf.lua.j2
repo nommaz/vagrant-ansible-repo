@@ -1,0 +1,22 @@
+# {{ ansible_managed }}
+
+settings {
+    logfile = "/tmp/lsyncd.log",
+    statusFile = "/tmp/lsyncd-status.log",
+    statusInterval = 20
+}
+
+sync {
+   default.rsyncssh,
+   source="/home/ftpuser/packages",
+   host="172.25.2.100",
+   targetdir="/home/ftpuser/packages",
+   rsync = {
+     archive = true,
+     compress = false,
+     whole_file = false
+   },
+   ssh = {
+     port = 22
+   }
+}

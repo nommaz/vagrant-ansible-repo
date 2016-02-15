@@ -19,6 +19,6 @@
     proto=tcp
     to_port={{ item }} 
   with_items:
-    - '20:21'
-    - '21000:21010'
-#    - { from: '{{ vsftpd_config.iteritems.pasv_min_port }}', to: '{{ vsftpd_config.iteritems.pasv_max_port }}' }
+    - '990'
+    - '22100:22120'
+#   TODO { from: '{{ vsftpd_config.iteritems.pasv_min_port }}', to: '{{ vsftpd_config.iteritems.pasv_max_port }}' }
